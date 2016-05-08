@@ -30,8 +30,7 @@ def dataNetwork():
 def GetMACAddress(ifname):
     import fcntl, socket, struct
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    info = fcntl.ioctl(s.fileno(), 0x8927,  struct.pack('256s', 
-ifname[:15]))
+    info = fcntl.ioctl(s.fileno(), 0x8927,  struct.pack('256s', ifname[:15]))
     return ':'.join(['%02x' % ord(char) for char in info[18:24]])
 
 def dataNetworkHandler():
@@ -53,8 +52,7 @@ def dataMessageHandler():
     mqttclient = paho.Client()
     mqttclient.on_message = on_message
     mqttclient.connect("test.mosquitto.org", 1883, 60)
-    mqttclient.subscribe("IoT101/" + GetMACAddress('wlan0') + 
-"/Message", 0)
+    mqttclient.subscribe("IoT101/" + GetMACAddress('wlan0') + "/Message", 0)
     while mqttclient.loop() == 0:
         pass
 
@@ -110,6 +108,5 @@ if __name__ == '__main__':
         time.sleep(5)
         json= {"Packet":dataNetwork()}
         dweepy.dweet_for("cedp_1", json)
-
 
 
